@@ -49,12 +49,28 @@
       im.src='data:image/svg+xml;utf8,'+encodeURIComponent(svg);
     });
   });
+  // video slider — slide badalne par doosri video pause, audio user play par
+  document.querySelectorAll('.vslider').forEach(function(sl){
+    var track=sl.querySelector('.vtrack'), slides=sl.querySelectorAll('.vslide'),
+        dots=sl.parentElement.querySelectorAll('.vdots button'), i=0;
+    function go(n){
+      i=(n+slides.length)%slides.length;
+      track.style.transform='translateX(-'+(i*100)+'%)';
+      slides.forEach(function(s,k){var v=s.querySelector('video');if(v&&k!==i)v.pause();});
+      dots.forEach(function(d,k){d.classList.toggle('on',k===i);});
+      var vv=slides[i].querySelector('video');if(vv&&vv.dataset.autonext==='1')vv.play().catch(function(){});
+    }
+    sl.querySelector('.vprev').addEventListener('click',function(){go(i-1);});
+    sl.querySelector('.vnext').addEventListener('click',function(){go(i+1);});
+    dots.forEach(function(d,k){d.addEventListener('click',function(){go(k);});});
+    slides.forEach(function(s){var v=s.querySelector('video');if(v)v.addEventListener('play',function(){slides.forEach(function(o){var ov=o.querySelector('video');if(ov&&ov!==v)ov.pause();});});});
+  });
   // enquiry -> WhatsApp
   var form=document.getElementById('enquiryForm');
   if(form){form.addEventListener('submit',function(e){
     e.preventDefault();
     var v=function(id){return (document.getElementById(id)||{}).value||'';};
-    var msg='New Enquiry - MP Advertising & Marketing\n\nName: '+v('fName')+'\nMobile: '+v('fMobile')+'\nEmail: '+v('fEmail')+'\nBusiness: '+v('fBiz')+'\nService: '+v('fService')+'\nLocation: '+v('fLoc')+'\nPreferred Date: '+v('fDate')+'\nBudget: '+v('fBudget')+'\nMessage: '+v('fMsg');
+    var msg='New Enquiry - MP Advertising & Marketing\n\nName: '+v('fName')+'\nMobile: '+v('fMobile')+'\nBusiness Name: '+v('fBiz')+'\nBusiness Category: '+v('fCat')+'\nCity / Location: '+v('fCity')+'\nAdvertising Service: '+v('fService')+'\nApprox Budget: '+v('fBudget')+'\nMessage: '+v('fMsg');
     window.open('https://api.whatsapp.com/send?phone=919303624365&text='+encodeURIComponent(msg),'_blank');
     var ok=document.getElementById('formOk');if(ok)ok.style.display='block';
   });}
