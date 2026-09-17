@@ -45,7 +45,7 @@ h2{font-size:clamp(1.7rem,3.6vw,2.7rem);font-weight:850}
 .mnav a:last-child{border:0}
 /* HERO */
 .hero{position:relative;min-height:92vh;display:flex;align-items:center;background:var(--bg);color:#fff;overflow:hidden;padding:60px 0}
-.hero-bg{position:absolute;inset:0;background:url('../img/hero-city.jpg') center/cover;opacity:.38}
+.hero-bg{position:absolute;inset:0;background:url('../img/hero-city.webp') center/cover;opacity:.38}
 .hero-glow{position:absolute;inset:0;background:radial-gradient(600px 400px at 20% 20%,rgba(255,61,0,.35),transparent),radial-gradient(700px 500px at 85% 80%,rgba(255,179,0,.22),transparent),linear-gradient(180deg,rgba(10,10,12,.55),rgba(10,10,12,.92))}
 .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
 .hero h1 .hl{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -55,7 +55,7 @@ h2{font-size:clamp(1.7rem,3.6vw,2.7rem);font-weight:850}
 .chip{font-size:12px;font-weight:700;letter-spacing:.08em;border:1px solid rgba(255,255,255,.18);padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.06)}
 .video-card{position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.5);background:#000;aspect-ratio:16/10}
 .video-card iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.video-fallback{position:absolute;inset:0;background:url('../img/city-night.jpg') center/cover}
+.video-fallback{position:absolute;inset:0;background:url('../img/city-night.webp') center/cover}
 /* STRIP */
 .strip{background:var(--grad);color:#fff;overflow:hidden;padding:16px 0;white-space:nowrap}
 .strip-track{display:inline-flex;gap:38px;animation:scroll 22s linear infinite;font-weight:900;letter-spacing:.14em;font-size:14px}
@@ -209,6 +209,20 @@ img{height:auto}
 .vgrid video{width:100%;height:300px;object-fit:contain;background:#000;border-radius:16px}
 @media(max-width:960px){.vgrid{grid-template-columns:repeat(2,1fr)}.vgrid video{height:240px}}
 @media(max-width:560px){.vgrid{grid-template-columns:1fr}}
+/* lead-gen: anchor offset, link hubs, mobile sticky bar */
+#lead-form,#offers,#budget,#portfolio{scroll-margin-top:76px}
+.chips a{color:inherit}.chips a span{transition:.2s}.chips a:hover span{background:#111;color:#fff}
+.stickybar{display:none}
+@media(max-width:960px){
+  body{padding-bottom:64px}
+  .float{display:none}
+  .stickybar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:120;background:#0b0b0e;border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom));gap:10px}
+  .stickybar a{flex:1;text-align:center;padding:13px 0;border-radius:12px;font-weight:800;font-size:15px;color:#fff}
+  .stickybar a:first-child{background:var(--grad)}
+  .stickybar a:last-child{background:#25D366}
+  .tiers{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:560px){.tiers{grid-template-columns:1fr!important}}
 /* homepage work showcase — saari images ek scrolling strip me */
 .showcase{overflow:hidden;background:#0e0e12;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .showcase h3{text-align:center;color:#fff;font-size:15px;letter-spacing:.18em;margin-bottom:16px}

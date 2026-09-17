@@ -80,13 +80,34 @@
     dots.forEach(function(d,k){d.addEventListener('click',function(){go(k);});});
     slides.forEach(function(s){var v=s.querySelector('video');if(v)v.addEventListener('play',function(){slides.forEach(function(o){var ov=o.querySelector('video');if(ov&&ov!==v)ov.pause();});});});
   });
+  // lead source tracking (Google / Facebook / Instagram / Website / Referral)
+  var leadSrc='Website Direct';
+  try{
+    var uu=new URLSearchParams(location.search).get('utm_source');
+    if(uu){leadSrc=uu;}
+    else{var stored=null;try{stored=localStorage.getItem('mp_lead_src');}catch(e){}
+      if(stored){leadSrc=stored;}
+      else{var rf=document.referrer||'';
+        if(/google\./i.test(rf))leadSrc='Google Search';
+        else if(/facebook\.com/i.test(rf))leadSrc='Facebook';
+        else if(/instagram\.com/i.test(rf))leadSrc='Instagram';
+        else if(rf){try{var hn=new URL(rf).hostname;leadSrc=(hn.indexOf('localhost')>-1||hn.indexOf('127.')===0||hn.indexOf('mpadvertising')>-1)?'Website Direct':'Referral ('+hn+')';}catch(e){leadSrc='Referral';}}
+        try{localStorage.setItem('mp_lead_src',leadSrc);}catch(e){}}}
+  }catch(e){}
+  // mobile sticky call bar (CALL NOW | WHATSAPP) — site-wide injected
+  var sb=document.createElement('div');sb.className='stickybar';
+  sb.innerHTML='<a href="tel:+919303624365">📞 CALL NOW</a><a href="https://api.whatsapp.com/send?phone=919303624365" target="_blank">💬 WHATSAPP</a>';
+  document.body.appendChild(sb);
   // enquiry -> WhatsApp
   var form=document.getElementById('enquiryForm');
   if(form){form.addEventListener('submit',function(e){
     e.preventDefault();
     var v=function(id){return (document.getElementById(id)||{}).value||'';};
-    var msg='New Enquiry - MP Advertising & Marketing\n\nName: '+v('fName')+'\nMobile: '+v('fMobile')+'\nBusiness Name: '+v('fBiz')+'\nBusiness Category: '+v('fCat')+'\nCity / Location: '+v('fCity')+'\nAdvertising Service: '+v('fService')+'\nApprox Budget: '+v('fBudget')+'\nMessage: '+v('fMsg');
+    var msg='Hello MP Advertising & Marketing,\n\nI want to promote my business.\n\nBusiness Name: '+v('fBiz')+'\nYour Name: '+v('fName')+'\nMobile: '+v('fMobile')+'\nCity: '+v('fCity')+'\nBusiness Category: '+v('fCat')+'\nAdvertising Requirement: '+v('fService')+'\nApproximate Budget: '+v('fBudget')+'\nMessage: '+v('fMsg')+'\nLead Source: '+leadSrc+'\n\nPlease suggest the best advertising options and send me a quotation.\n\nThank you.';
+    window.dataLayer=window.dataLayer||[];window.dataLayer.push({'event':'lead_submit','service':v('fService'),'source':leadSrc});
+    try{var L=JSON.parse(localStorage.getItem('mp_leads')||'[]');L.push({t:new Date().toISOString(),biz:v('fBiz'),mob:v('fMobile'),city:v('fCity'),svc:v('fService'),src:leadSrc});localStorage.setItem('mp_leads',JSON.stringify(L));}catch(e){}
     window.open('https://api.whatsapp.com/send?phone=919303624365&text='+encodeURIComponent(msg),'_blank');
     var ok=document.getElementById('formOk');if(ok)ok.style.display='block';
+    setTimeout(function(){location.href='thank-you.html';},900);
   });}
 })();
