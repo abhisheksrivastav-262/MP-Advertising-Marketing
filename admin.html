@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin – Lead Manager | MP Advertising</title><meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="assets/css/style.css">
+<style>.tbl{width:100%;border-collapse:collapse;font-size:14px}.tbl th,.tbl td{border:1px solid #e3e3ea;padding:10px;text-align:left}.tbl th{background:#111;color:#fff}.tbl select{padding:6px;border-radius:8px}#gate{max-width:380px;margin:80px auto;text-align:center}</style>
+</head><body>
+<div class="container" id="gate">
+<h1>🔒 ADMIN LOGIN</h1>
+<p style="color:#666">PIN dalen (default <b>1234</b> — <code>assets/js/config.js</code> me badlen).</p>
+<input id="pin" type="password" inputmode="numeric" placeholder="PIN" style="width:100%;padding:13px;border-radius:12px;border:1px solid #ccc;margin:12px 0">
+<button class="btn btn-acc" id="go" style="width:100%">LOGIN</button>
+<p style="font-size:12px;color:#999;margin-top:12px">Note: leads isi browser me save hote hain. Dusre device par dekhne ke liye WhatsApp/email leads use karen.</p>
+</div>
+<div class="container" id="panel" style="display:none;padding:40px 20px">
+<h1>📋 LEAD MANAGER</h1>
+<p style="color:#666">Website forms se aayi enquiries — status update karen: New Lead → Contacted → Follow-up → Converted → Closed</p>
+<div style="display:flex;gap:10px;margin:16px 0;flex-wrap:wrap"><button class="btn btn-dark" id="csv">⬇ Export CSV</button><button class="btn btn-light" id="wipe">🗑 Clear All</button><a class="btn btn-light" href="index.html">← Website</a></div>
+<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>#</th><th>Name</th><th>Mobile</th><th>Business</th><th>Service</th><th>City</th><th>Budget</th><th>Source</th><th>Date</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+<h2 style="margin-top:30px">⚙️ Kya-kya badal sakte hain (bina developer)</h2>
+<p style="font-size:14px">File: <code>assets/js/config.js</code> kholen aur text badal den — <b>Offer banner, discount %, WhatsApp number, email, address, admin PIN</b>. Photos/videos badalne ke liye <code>assets/real/</code> ya <code>assets/work/</code> me same naam se nayi file rakhen. Gallery me photo jodne ke liye <code>gallery.html</code> me ek line copy karen. Blog/News chahiye to batayen, section bana dunga.</p>
+</div>
+<script src="assets/js/config.js"></script>
+<script>
+var PIN=(window.SITE_CONFIG&&SITE_CONFIG.ADMIN_PIN)||'1234';
+document.getElementById('go').onclick=function(){
+  if(document.getElementById('pin').value===PIN){document.getElementById('gate').style.display='none';document.getElementById('panel').style.display='block';render();}
+  else alert('Galat PIN');
+};
+function statusMap(){try{return JSON.parse(localStorage.getItem('mp_lead_status')||'{}');}catch(e){return{};}}
+function render(){
+  var leads=[];try{leads=JSON.parse(localStorage.getItem('mp_leads')||'[]');}catch(e){}
+  var st=statusMap(),tb=document.getElementById('rows');tb.innerHTML='';
+  if(!leads.length)tb.innerHTML='<tr><td colspan="10" style="text-align:center;color:#999">Abhi koi lead nahi — website form test karke dekhen.</td></tr>';
+  leads.forEach(function(L,i){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td>'+(i+1)+'</td><td>'+(L.name||'')+'</td><td><a href="tel:+91'+(L.mob||'').replace(/\D/g,'').slice(-10)+'">'+(L.mob||'')+'</a></td><td>'+(L.biz||'')+'</td><td>'+(L.svc||'')+'</td><td>'+(L.city||'')+'</td><td>'+(L.budget||'')+'</td><td>'+(L.src||'')+'</td><td>'+(L.t||'').slice(0,10)+'</td>';
+    var s=document.createElement('select');
+    ['New Lead','Contacted','Follow-up','Converted','Closed'].forEach(function(o){var op=document.createElement('option');op.textContent=o;s.appendChild(op);});
+    s.value=st[i]||'New Lead';
+    s.onchange=function(){var m=statusMap();m[i]=s.value;localStorage.setItem('mp_lead_status',JSON.stringify(m));};
+    var td=document.createElement('td');td.appendChild(s);tr.appendChild(td);tb.appendChild(tr);
+  });
+}
+document.getElementById('csv').onclick=function(){
+  var leads=[];try{leads=JSON.parse(localStorage.getItem('mp_leads')||'[]');}catch(e){}
+  var st=statusMap(),csv='Name,Mobile,Business,Service,City,Budget,Source,Date,Status\n';
+  leads.forEach(function(L,i){csv+=[L.name,L.mob,L.biz,L.svc,L.city,L.budget,L.src,(L.t||'').slice(0,10),st[i]||'New Lead'].map(function(x){return '"'+(x||'')+'"';}).join(',')+'\n';});
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='mp-leads.csv';a.click();
+};
+document.getElementById('wipe').onclick=function(){if(confirm('Saari leads delete karen?')){localStorage.removeItem('mp_leads');localStorage.removeItem('mp_lead_status');render();}};
+</script>
+</body></html>

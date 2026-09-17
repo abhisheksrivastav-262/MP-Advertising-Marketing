@@ -94,10 +94,39 @@
         else if(rf){try{var hn=new URL(rf).hostname;leadSrc=(hn.indexOf('localhost')>-1||hn.indexOf('127.')===0||hn.indexOf('mpadvertising')>-1)?'Website Direct':'Referral ('+hn+')';}catch(e){leadSrc='Referral';}}
         try{localStorage.setItem('mp_lead_src',leadSrc);}catch(e){}}}
   }catch(e){}
-  // mobile sticky call bar (CALL NOW | WHATSAPP) — site-wide injected
+  // mobile sticky call bar (CALL | WHATSAPP | QUOTE) — site-wide injected
   var sb=document.createElement('div');sb.className='stickybar';
-  sb.innerHTML='<a href="tel:+919303624365">📞 CALL NOW</a><a href="https://api.whatsapp.com/send?phone=919303624365" target="_blank">💬 WHATSAPP</a>';
+  sb.innerHTML='<a href="tel:+919303624365">📞 CALL NOW</a><a href="https://api.whatsapp.com/send?phone=919303624365&text='+encodeURIComponent('Hello MP Advertising & Marketing, I want to know about your advertising services. Please share suitable options and pricing for my business.')+'" target="_blank">💬 WHATSAPP</a><a href="enquiry.html">GET QUOTE</a>';
   document.body.appendChild(sb);
+  // offer banner from SITE_CONFIG (admin editable)
+  try{
+    if(window.SITE_CONFIG){
+      var C=window.SITE_CONFIG;
+      ['offBadge','offBadge2'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=C.OFFER_BADGE;});
+      var t=document.getElementById('offTitle');if(t)t.textContent=C.OFFER_TITLE;
+      var d=document.getElementById('offText');if(d)d.textContent=C.OFFER_TEXT;
+      var cta=document.getElementById('offCta');if(cta){cta.textContent=(C.OFFER_CTA||'Claim Offer')+' → WhatsApp';cta.href='https://api.whatsapp.com/send?phone='+C.WHATSAPP+'&text='+encodeURIComponent('Hello MP Advertising & Marketing, I want to claim the offer: '+C.OFFER_TITLE+' - '+C.OFFER_TEXT);}
+    }
+  }catch(e){}
+  // conversion click tracking (GA4-ready via dataLayer)
+  document.addEventListener('click',function(e){
+    var a=e.target.closest?e.target.closest('a'):null;if(!a||!a.href)return;
+    window.dataLayer=window.dataLayer||[];
+    if(a.href.indexOf('whatsapp')>-1||/api\.whatsapp/.test(a.href))window.dataLayer.push({'event':'whatsapp_click','page':location.pathname});
+    else if(a.href.indexOf('tel:')===0)window.dataLayer.push({'event':'call_click','page':location.pathname});
+    else if(a.href.indexOf('enquiry')>-1||/GET.*QUOTE/i.test(a.textContent||''))window.dataLayer.push({'event':'get_quote_click','page':location.pathname});
+  });
+  // budget planner pills -> enquiry with budget preselected
+  document.querySelectorAll('.pills').forEach(function(box){
+    var btn=box.parentElement.querySelector('[data-plan-go]');
+    box.querySelectorAll('.pill').forEach(function(p){p.addEventListener('click',function(){
+      box.querySelectorAll('.pill').forEach(function(x){x.classList.remove('on');});p.classList.add('on');
+      if(btn)btn.href='enquiry.html?budget='+encodeURIComponent(p.dataset.budget||p.textContent.trim());
+    });});
+  });
+  // prefill budget from URL (?budget=)
+  try{var bq=new URLSearchParams(location.search).get('budget');var bs=document.getElementById('fBudget');
+    if(bq&&bs){for(var i=0;i<bs.options.length;i++){if(bs.options[i].text===bq||bq.indexOf(bs.options[i].text)>-1){bs.selectedIndex=i;break;}}}}catch(e){}
   // enquiry -> WhatsApp
   var form=document.getElementById('enquiryForm');
   if(form){form.addEventListener('submit',function(e){
@@ -105,9 +134,11 @@
     var v=function(id){return (document.getElementById(id)||{}).value||'';};
     var msg='Hello MP Advertising & Marketing,\n\nI want to promote my business.\n\nBusiness Name: '+v('fBiz')+'\nYour Name: '+v('fName')+'\nMobile: '+v('fMobile')+'\nCity: '+v('fCity')+'\nBusiness Category: '+v('fCat')+'\nAdvertising Requirement: '+v('fService')+'\nApproximate Budget: '+v('fBudget')+'\nMessage: '+v('fMsg')+'\nLead Source: '+leadSrc+'\n\nPlease suggest the best advertising options and send me a quotation.\n\nThank you.';
     window.dataLayer=window.dataLayer||[];window.dataLayer.push({'event':'lead_submit','service':v('fService'),'source':leadSrc});
-    try{var L=JSON.parse(localStorage.getItem('mp_leads')||'[]');L.push({t:new Date().toISOString(),biz:v('fBiz'),mob:v('fMobile'),city:v('fCity'),svc:v('fService'),src:leadSrc});localStorage.setItem('mp_leads',JSON.stringify(L));}catch(e){}
+    try{var L=JSON.parse(localStorage.getItem('mp_leads')||'[]');L.push({t:new Date().toISOString(),name:v('fName'),biz:v('fBiz'),mob:v('fMobile'),city:v('fCity'),svc:v('fService'),budget:v('fBudget'),src:leadSrc});localStorage.setItem('mp_leads',JSON.stringify(L));}catch(e){}
     window.open('https://api.whatsapp.com/send?phone=919303624365&text='+encodeURIComponent(msg),'_blank');
     var ok=document.getElementById('formOk');if(ok)ok.style.display='block';
+    var mf=document.getElementById('mailFallback');
+    if(mf){mf.style.display='inline-flex';mf.href='mailto:manish.digicable@gmail.com?subject='+encodeURIComponent('New Enquiry - '+v('fBiz'))+'&body='+encodeURIComponent(msg);}
     setTimeout(function(){location.href='thank-you.html';},900);
   });}
 })();

@@ -223,6 +223,23 @@ img{height:auto}
   .tiers{grid-template-columns:repeat(2,1fr)!important}
 }
 @media(max-width:560px){.tiers{grid-template-columns:1fr!important}}
+/* offer banner (config.js se editable) */
+.offer-band{position:relative;overflow:hidden;background:linear-gradient(135deg,#7a0e00,#c22a00 55%,#ff6a00);color:#fff;border-radius:24px;padding:52px 40px;text-align:center;box-shadow:0 24px 60px rgba(200,40,0,.35)}
+.offer-band::before,.offer-band::after{content:'★';position:absolute;font-size:120px;opacity:.14}
+.offer-band::before{left:24px;top:6px}.offer-band::after{right:24px;bottom:-20px}
+.offer-band h2{font-size:clamp(2rem,5vw,3.4rem);color:#fff}
+.offer-band .off-badge{display:inline-block;background:#fff;color:#c22a00;font-weight:900;letter-spacing:.14em;font-size:12px;padding:8px 18px;border-radius:999px;margin-bottom:14px}
+/* budget planner pills */
+.pills{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.pill{padding:14px 26px;border-radius:14px;border:2px solid #dcdce4;background:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.pill.on{border-color:var(--acc);background:#fff4ec;box-shadow:0 8px 22px rgba(255,61,0,.18)}
+/* 3-button mobile bar: CALL | WHATSAPP | QUOTE */
+@media(max-width:960px){
+  .stickybar a{font-size:13.5px}
+  .stickybar a:nth-child(2){background:#25D366}
+  .stickybar a:last-child{background:#111}
+  .offer-band{padding:36px 22px}
+}
 /* homepage work showcase — saari images ek scrolling strip me */
 .showcase{overflow:hidden;background:#0e0e12;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .showcase h3{text-align:center;color:#fff;font-size:15px;letter-spacing:.18em;margin-bottom:16px}
