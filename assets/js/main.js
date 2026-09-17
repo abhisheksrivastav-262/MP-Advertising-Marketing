@@ -10,12 +10,27 @@
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target);}});},{threshold:.12});
     els.forEach(function(el){io.observe(el);});
   } else { els.forEach(function(el){el.classList.add('vis');}); }
-  // gallery filter + lightbox
-  var fbtns=document.querySelectorAll('.fbtn'), gitems=document.querySelectorAll('#galGrid img');
+  // gallery filter + lightbox (images + videos)
+  var fbtns=document.querySelectorAll('.fbtn'), gitems=document.querySelectorAll('#galGrid img'),
+      galGrid=document.getElementById('galGrid'), videoGrid=document.getElementById('videoGrid'),
+      videoLabel=document.getElementById('videoLabel');
+  function pauseVids(){if(videoGrid)videoGrid.querySelectorAll('video').forEach(function(v){v.pause();});}
+  if(videoGrid)videoGrid.querySelectorAll('video').forEach(function(v){v.addEventListener('play',function(){videoGrid.querySelectorAll('video').forEach(function(o){if(o!==v)o.pause();});});});
   fbtns.forEach(function(b){b.addEventListener('click',function(){
     fbtns.forEach(function(x){x.classList.remove('on');});b.classList.add('on');
     var f=b.dataset.filter;
-    gitems.forEach(function(im){im.parentElement.style.display=(f==='all'||im.dataset.cat===f)?'':'none';});
+    if(f==='videos'){
+      if(galGrid)galGrid.style.display='none';
+      if(videoGrid)videoGrid.style.display='grid';
+      if(videoLabel)videoLabel.style.display='block';
+    } else {
+      pauseVids();
+      if(galGrid)galGrid.style.display='';
+      var showV=(f==='all');
+      if(videoGrid)videoGrid.style.display=showV?'grid':'none';
+      if(videoLabel)videoLabel.style.display=showV?'block':'none';
+      gitems.forEach(function(im){im.parentElement.style.display=(f==='all'||im.dataset.cat===f)?'':'none';});
+    }
   });});
   var lb=document.getElementById('lightbox'), lbImg=document.getElementById('lbImg');
   if(lb){gitems.forEach(function(im){im.addEventListener('click',function(){lbImg.src=im.src;lb.classList.add('open');});});
