@@ -204,3 +204,10 @@ img{height:auto}
 /* customer gallery — poori creative dikhe, cut na ho */
 .work-gal img{object-fit:contain!important;background:#0e0e12;height:300px!important}
 @media(max-width:960px){.work-gal img{height:260px!important}}
+/* homepage work showcase — saari images ek scrolling strip me */
+.showcase{overflow:hidden;background:#0e0e12;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.showcase h3{text-align:center;color:#fff;font-size:15px;letter-spacing:.18em;margin-bottom:16px}
+.show-track{display:flex;gap:16px;width:max-content;animation:scroll 45s linear infinite}
+.showcase:hover .show-track{animation-play-state:paused}
+.show-track img{height:220px;width:auto;max-width:300px;border-radius:14px;object-fit:contain;background:#000;border:1px solid var(--line)}
+@media(max-width:960px){.show-track img{height:180px}.show-track{animation-duration:35s}}
