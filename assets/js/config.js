@@ -4,7 +4,7 @@ var SITE_CONFIG = {
   ADMIN_PIN: '1234',              // admin.html ka PIN (koi bhi 4-digit rakhen)
   WHATSAPP: '919303624365',       // WhatsApp number (country code ke saath, bina +)
   PHONE_DISPLAY: '9303624365',
-  EMAIL: 'manish.digicable@gmail.com',
+  EMAIL: 'mpadvertisingandmarketing@gmail.com',
   ADDRESS: 'F-10 Hart Bazar, Vijay Nagar, Jabalpur, Madhya Pradesh',
   OFFER_BADGE: 'SPECIAL ADVERTISING OFFER',
   OFFER_TITLE: 'GET UP TO 25% OFF',

@@ -138,7 +138,7 @@
     window.open('https://api.whatsapp.com/send?phone=919303624365&text='+encodeURIComponent(msg),'_blank');
     var ok=document.getElementById('formOk');if(ok)ok.style.display='block';
     var mf=document.getElementById('mailFallback');
-    if(mf){mf.style.display='inline-flex';mf.href='mailto:manish.digicable@gmail.com?subject='+encodeURIComponent('New Enquiry - '+v('fBiz'))+'&body='+encodeURIComponent(msg);}
+    if(mf){mf.style.display='inline-flex';mf.href='mailto:mpadvertisingandmarketing@gmail.com?subject='+encodeURIComponent('New Enquiry - '+v('fBiz'))+'&body='+encodeURIComponent(msg);}
     setTimeout(function(){location.href='thank-you.html';},900);
   });}
 })();
